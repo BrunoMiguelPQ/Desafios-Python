@@ -1,0 +1,22 @@
+#Nome em maiúsculas e minúsculas e Partido
+while True:
+    nome = input('Digite seu nome completo: ')
+
+    nomeu = nome.upper() #Maiusculo
+    nomel = nome.lower() #Minusculo
+    nomes = nome.split() #Partido
+
+    print(f'Nome completo em Maiusculo: {nomeu}')
+    print(f'Nome completo em Minusculo: {nomel}')
+    print(f'Nome completo Partido: {nomes}')
+
+    while True:
+        resp = input('Deseja continuar? [S/N] ').strip().upper()[0]
+        if resp in 'SN':
+            break
+        print('Por favor digite apenas S ou N.')
+
+    if resp == 'N':
+        break
+
+print('Encerrando Programa!')
