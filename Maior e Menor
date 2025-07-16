@@ -1,6 +1,10 @@
 # Peça 3 números e diga qual é o maior e qual é o menor.
 import math
 
+print('\033[35m *.*\033[m' * 8)
+print(' \033[35m*\033[m        \033[34mMaior e Menor\033[m        \033[35m*\033[m')
+print('\033[35m *.*\033[m' * 8)
+
 maior = -math.inf   # valor inicial mais baixo
 menor = math.inf    # Valor inicial mais alto
 
