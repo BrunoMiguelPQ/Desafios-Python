@@ -12,9 +12,11 @@ while True:
 
     while True:
         resp = str(input('Quer continuar? [S/N]: ')).strip().upper()[0]
+        
         if resp in 'SN':
             break
         print('\033[31mComando Inválido!\033[m')
     if resp == 'N':
         break
+        
 print('\033[31mPrograma encerrado. Volte sempre! ')
