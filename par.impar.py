@@ -1,4 +1,4 @@
-
+#Peça um número e diga se é par ou ímpar
 print('\033[35m *.*\033[m' * 8)
 print(' \033[35m*\033[m        \033[34mPar ou Ímpar\033[m         \033[35m*\033[m')
 print('\033[35m *.*\033[m' * 8)
