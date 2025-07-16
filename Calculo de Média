@@ -11,10 +11,14 @@ while True:
         total += nota
         contador += 1
     media = total / contador
-    print(f'\033[33mA média das 5 notas foi: {media:.2f}\033[m')
+    
+    if media >= 6:
+        print(f'\033[32mParabens, você foi Aprovado com média de {media:.2f}!\033[m')
+    else:
+        print(f'\033[31mReprovado!!! A sua média foi de {media:.2f}!\033[m')
 
     while True:
-        resp = str(input('Quer continuar? [S/N] ')).upper()
+        resp = str(input('Deseja saber algo mais? [S/N] ')).upper()
         if resp in 'S, N':
             break
         print('\033[31mERRO!Responda só com S ou N!\033[m')
