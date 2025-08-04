@@ -62,7 +62,7 @@ KV = '''
                 radius: [10,]
                 on_press: root.calcular_media()
 
-        Widget:  # espaço flexível antes dos labels para empurrar valores para o centro
+        Widget:
 
         Label:
             id: lista_numeros
@@ -87,7 +87,7 @@ KV = '''
             size_hint_y: None
             height: self.texture_size[1]
 
-        Widget:  # espaço flexível depois dos labels para centralizar verticalmente
+        Widget:
 '''
 
 class NotaScreen(BoxLayout):
@@ -100,7 +100,7 @@ class NotaScreen(BoxLayout):
             valor = float(nota)
             self.notas.append(valor)
             self.numeros_texto = "Números inseridos: " + ", ".join(f"{n:.2f}" for n in self.notas)
-            self.resultado = ""  # limpa resultado para não confundir
+            self.resultado = "" 
             self.ids.input_nota.text = ''
         except ValueError:
             self.resultado = "Por favor, insira um número válido."
@@ -112,7 +112,7 @@ class NotaScreen(BoxLayout):
         else:
             media = sum(self.notas) / len(self.notas)
             self.resultado = f"Média: {media:.2f}"
-            self.numeros_texto = ""  # esconde lista de números depois do cálculo
+            self.numeros_texto = "" 
 
 class MediaApp(App):
     def build(self):
@@ -122,4 +122,5 @@ class MediaApp(App):
 
 if __name__ == '__main__':
     MediaApp().run()
+
 
