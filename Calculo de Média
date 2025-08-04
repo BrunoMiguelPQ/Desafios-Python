@@ -1,28 +1,125 @@
-#Peça 5 notas e mostre a média. Diga se o aluno foi aprovado (média ≥ 6).
+from kivy.app import App
+from kivy.lang import Builder
+from kivy.uix.boxlayout import BoxLayout
+from kivy.properties import StringProperty, ListProperty
+from kivy.core.window import Window
 
-print('\033[35m *.*\033[m' * 8)
-print(' \033[35m*\033[m       \033[34mMédia e Situação\033[m      \033[35m*\033[m')
-print('\033[35m *.*\033[m' * 8)
-total = 0
-contador = 0
-while True:
-    for c in range(1, 6):
-        nota = float(input(f'Digite sua {c} nota: '))
-        total += nota
-        contador += 1
-    media = total / contador
-    
-    if media >= 6:
-        print(f'\033[32mParabens, você foi Aprovado com média de {media:.2f}!\033[m')
-    else:
-        print(f'\033[31mReprovado!!! A sua média foi de {media:.2f}!\033[m')
+Window.clearcolor = (1, 1, 1, 1)
 
-    while True:
-        resp = str(input('Deseja saber algo mais? [S/N] ')).upper()
-        if resp in 'S, N':
-            break
-        print('\033[31mERRO!Responda só com S ou N!\033[m')
-    if resp == 'N':
-        break
+KV = '''
+<NotaScreen>:
+    orientation: 'vertical'
+    padding: dp(30)
+    spacing: dp(20)
 
-print('\033[31mEncerrando programa!\033[m')
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint_y: 1
+        spacing: dp(20)
+
+        TextInput:
+            id: input_nota
+            hint_text: "Digite um número (ex: 12.5)"
+            multiline: False
+            input_filter: 'float'
+            font_size: '20sp'
+            background_normal: ''
+            background_color: 0.95, 0.95, 0.95, 1
+            foreground_color: 0.2, 0.2, 0.2, 1
+            padding: dp(12)
+            cursor_color: 0.3, 0.3, 0.3, 1
+            border: (dp(8), dp(8), dp(8), dp(8))
+            radius: [10,]
+            size_hint_y: None
+            height: dp(50)
+
+        BoxLayout:
+            size_hint_y: None
+            height: dp(50)
+            spacing: dp(10)
+
+            Button:
+                text: "Adicionar Número"
+                size_hint_x: None
+                width: dp(140)
+                background_normal: ''
+                background_color: 0.3, 0.6, 0.9, 1
+                color: 1, 1, 1, 1
+                font_size: '18sp'
+                bold: True
+                radius: [10,]
+                on_press: root.adicionar_nota(input_nota.text)
+
+            Button:
+                text: "Calcular Média"
+                size_hint_x: None
+                width: dp(140)
+                background_normal: ''
+                background_color: 0.2, 0.4, 0.7, 1
+                color: 1, 1, 1, 1
+                font_size: '18sp'
+                bold: True
+                radius: [10,]
+                on_press: root.calcular_media()
+
+        Widget:  # espaço flexível antes dos labels para empurrar valores para o centro
+
+        Label:
+            id: lista_numeros
+            text: root.numeros_texto
+            font_size: '18sp'
+            color: 0.15, 0.15, 0.15, 1
+            halign: 'center'
+            valign: 'middle'
+            text_size: self.width, None
+            size_hint_y: None
+            height: self.texture_size[1]
+
+        Label:
+            id: resultado_label
+            text: root.resultado
+            font_size: '24sp'
+            color: 0.1, 0.4, 0.8, 1
+            bold: True
+            halign: 'center'
+            valign: 'middle'
+            text_size: self.width, None
+            size_hint_y: None
+            height: self.texture_size[1]
+
+        Widget:  # espaço flexível depois dos labels para centralizar verticalmente
+'''
+
+class NotaScreen(BoxLayout):
+    resultado = StringProperty("")
+    numeros_texto = StringProperty("")
+    notas = ListProperty([])
+
+    def adicionar_nota(self, nota):
+        try:
+            valor = float(nota)
+            self.notas.append(valor)
+            self.numeros_texto = "Números inseridos: " + ", ".join(f"{n:.2f}" for n in self.notas)
+            self.resultado = ""  # limpa resultado para não confundir
+            self.ids.input_nota.text = ''
+        except ValueError:
+            self.resultado = "Por favor, insira um número válido."
+
+    def calcular_media(self):
+        if not self.notas:
+            self.resultado = "Nenhum número foi inserido."
+            self.numeros_texto = ""
+        else:
+            media = sum(self.notas) / len(self.notas)
+            self.resultado = f"Média: {media:.2f}"
+            self.numeros_texto = ""  # esconde lista de números depois do cálculo
+
+class MediaApp(App):
+    def build(self):
+        self.title = "Calculadora de Média"
+        Builder.load_string(KV)
+        return NotaScreen()
+
+if __name__ == '__main__':
+    MediaApp().run()
+
