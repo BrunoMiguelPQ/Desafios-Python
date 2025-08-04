@@ -1,0 +1,88 @@
+import math
+from kivy.app import App
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.label import Label
+from kivy.uix.textinput import TextInput
+from kivy.uix.button import Button
+from kivy.core.window import Window
+
+class PaintCalculator(BoxLayout):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.orientation = 'vertical'
+        self.padding = 20
+        self.spacing = 10
+        self.size_hint = (None, None)
+        self.width = 320
+        self.height = 420
+        self.pos_hint = {'center_x': 0.5, 'center_y': 0.5}
+
+        self.largura_input = TextInput(
+            hint_text="Largura da parede (m)",
+            multiline=False,
+            input_filter='float',
+            size_hint=(1, None),
+            height=40,
+            foreground_color=(0, 0, 0, 1)
+        )
+        self.add_widget(self.largura_input)
+
+        self.altura_input = TextInput(
+            hint_text="Altura da parede (m)",
+            multiline=False,
+            input_filter='float',
+            size_hint=(1, None),
+            height=40,
+            foreground_color=(0, 0, 0, 1)
+        )
+        self.add_widget(self.altura_input)
+
+        self.demaos_input = TextInput(
+            hint_text="Número de demãos",
+            multiline=False,
+            input_filter='int',
+            size_hint=(1, None),
+            height=40,
+            foreground_color=(0, 0, 0, 1)
+        )
+        self.add_widget(self.demaos_input)
+
+        self.result_label = Label(
+            text="Preencha os campos e clique em calcular",
+            size_hint=(1, None),
+            height=150,
+            halign='center',
+            valign='middle',
+            color=(0, 0, 0, 1)
+        )
+        self.result_label.text_size = (self.width - 40, None)
+        self.add_widget(self.result_label)
+
+        btn = Button(text="Calcular litros necessários", size_hint=(1, None), height=40)
+        btn.bind(on_press=self.calcular)
+        self.add_widget(btn)
+
+    def calcular(self, instance):
+        try:
+            larg = float(self.largura_input.text)
+            alt = float(self.altura_input.text)
+            demaos = int(self.demaos_input.text)
+
+            area = larg * alt
+            rendimento = 10  # m² por litro, valor médio
+            litros = (area * demaos) / rendimento
+            litros_ceil = math.ceil(litros)
+
+
+            self.result_label.text = (f"Para {area} m² você precisa de {litros_ceil} litros em {demaos} demaos.\n"
+                "Obs: cálculo baseado em rendimento médio de 10 m²/litro.\n")
+        except ValueError:
+            self.result_label.text = "Por favor, preencha todos os campos com valores válidos."
+
+class PaintApp(App):
+    def build(self):
+        Window.clearcolor = (1, 1, 1, 1)
+        return PaintCalculator()
+
+if __name__ == '__main__':
+    PaintApp().run()
