@@ -1,20 +1,82 @@
-print('\033[35m *.*\033[m' * 4)
-print(' \033[35m*\033[m   \033[34mTabuada\033[m   \033[35m*\033[m')
-print('\033[35m *.*\033[m' * 4)
+from kivy.app import App
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.label import Label
+from kivy.uix.textinput import TextInput
+from kivy.uix.button import Button
+from kivy.core.window import Window
 
-while True:
-    t = int(input('Que tabuada deseja saber?: '))
-    for c in range(1, 11):
-        print(f'{t:} x {c:>2} = {t*c:>2}')
 
-    while True:
-        resp = str(input('\033[33mQuer continuar? [S/N]: \033[m')).strip().upper()[0]
+class TabuadaApp(BoxLayout):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.orientation = 'vertical'
+        self.padding = 20
+        self.spacing = 10
+        self.size_hint = (None, None)
+        self.width = 320
+        self.height = 500
+        self.pos_hint = {'center_x': 0.5, 'center_y': 0.5}
 
-        if resp in 'SN':
-            break
-        print('\033[31mDigite apena S ou N!\033[m')
+        # Título
+        self.add_widget(Label(
+            text='Tabuada',
+            font_size=20,
+            bold=True,
+            size_hint=(1, None),
+            height=40,
+            color=(0, 0, 0, 1)
+        ))
 
-    if resp == 'N':
-        break
+        # Entrada
+        self.input_num = TextInput(
+            hint_text='Digite um número',
+            input_filter='int',
+            multiline=False,
+            size_hint=(1, None),
+            height=40,
+            foreground_color=(0, 0, 0, 1)
+        )
+        self.add_widget(self.input_num)
 
-print('\033[31mEncerrando Programa!')
+        # Resultado
+        self.result_label = Label(
+            text='A tabuada aparecerá aqui.',
+            size_hint=(1, None),
+            height=300,
+            halign='left',
+            valign='top',
+            color=(0, 0, 0, 1)
+        )
+        self.result_label.text_size = (self.width - 40, None)
+        self.add_widget(self.result_label)
+
+        # Botões
+        btn_calcular = Button(text='Mostrar Tabuada', size_hint=(1, None), height=40)
+        btn_calcular.bind(on_press=self.calcular_tabuada)
+        self.add_widget(btn_calcular)
+
+        btn_limpar = Button(text='Limpar', size_hint=(1, None), height=40)
+        btn_limpar.bind(on_press=self.limpar)
+        self.add_widget(btn_limpar)
+
+    def calcular_tabuada(self, instance):
+        try:
+            num = int(self.input_num.text)
+            linhas = [f'{num} x {i:>2} = {num * i:>3}' for i in range(1, 11)]
+            self.result_label.text = '\n'.join(linhas)
+        except ValueError:
+            self.result_label.text = 'Digite um número inteiro válido.'
+
+    def limpar(self, instance):
+        self.input_num.text = ''
+        self.result_label.text = 'A tabuada aparecerá aqui.'
+
+
+class TabuadaKivyApp(App):
+    def build(self):
+        Window.clearcolor = (1, 1, 1, 1)  # Fundo branco
+        return TabuadaApp()
+
+
+if __name__ == '__main__':
+    TabuadaKivyApp().run()
